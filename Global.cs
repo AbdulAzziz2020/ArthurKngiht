@@ -4,6 +4,7 @@ using System.IO;
 
 namespace ArthurKnight
 {
+    ////////// SINGLETON ///////////
     public abstract class Singleton<T> : MonoBehaviour where T : Component
     {
         public static T Instance { get; private set; }
@@ -28,6 +29,8 @@ namespace ArthurKnight
             }
         }
     }
+    
+    ////////// OBJECT POOLER NO GROW UP ///////////
     public abstract class ObjectPool : MonoBehaviour
     {
         public static void Init<T>(T prefab, int size, List<T> list, Transform parent) where T : Component
@@ -42,12 +45,7 @@ namespace ArthurKnight
 
         public static T GetObjectInPool<T>(List<T> list) where T : Component
         {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (!list[i].gameObject.activeInHierarchy) return list[i];
-            }
-
-            return null;
+            return list.Find(x => !x.gameObject.activeInHierarchy);
         }
 
         public static void SetActiveGameObject<T>(List<T> list, Transform origin) where T : Component
@@ -62,6 +60,8 @@ namespace ArthurKnight
             }
         }
     }
+    
+    ////////// ENCRYPT-DECRYPT ///////////
     public abstract class Data
     {
         public static string Encrypt<T>(T data, string key)
