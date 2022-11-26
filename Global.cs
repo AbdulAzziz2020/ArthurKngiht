@@ -31,13 +31,13 @@ namespace ArthurKnight
     }
     
     ////////// OBJECT POOLER NO GROW UP ///////////
-    public abstract class ObjectPool : MonoBehaviour
+    public abstract class ObjectPool
     {
         public static void Init<T>(T prefab, int size, List<T> list, Transform parent) where T : Component
         {
             for (int i = 0; i < size; i++)
             {
-                T obj = Instantiate(prefab, parent);
+                T obj = GameObject.Instantiate(prefab, parent);
                 obj.gameObject.SetActive(false);
                 list.Add(obj);
             }
