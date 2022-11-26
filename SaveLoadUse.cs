@@ -1,54 +1,64 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using ArthurKnight;
+using System.IO;
 
-public class SaveLoad : Singleton<SaveLoad>
+public class Skills : MonoBehaviour
 {
-    public override void Awake()
+    public string heroName;
+    public int heroLevel;
+    public float heroSpeed;
+    public Vector3 pos;
+
+    private const string directory = "/Data/";
+    private const string filename = "Heroes.miracle-gate";
+    private static readonly string key = ";lk12~.q23";
+
+    private void Update()
     {
-        base.Awake();
+        if (Input.GetKeyDown(KeyCode.Space)) SaveData();
+        if (Input.GetKeyDown(KeyCode.Return)) LoadData();
     }
 
-    private static string directory = "/datas/";
-    private static string fileName = "/hero.miracle-gate";
-    private static readonly string key = "5664313331";
-
-    // public Hero hero = new Hero();
-    public Player player;
-    
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Save();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Load();
-        }
-    }
-
-    public void Save()
+    public void SaveData()
     {
         string dir = Application.persistentDataPath + directory;
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-        PlayerCounter counter = new PlayerCounter(player.pos);
+        Hero counter = new Hero();
+        counter.name = heroName;
+        counter.level = heroLevel;
+        counter.speed = heroSpeed;
+        counter.pos = pos;
         
-        string json = Data.Encrypt<PlayerCounter>(counter, key);
-        File.WriteAllText(dir + fileName, json);
+        string json = Data.Encrypt(counter, key);
+        File.WriteAllText(dir + filename, json);
+
+        Debug.Log("Save!!");
     }
 
-    public void Load()
+    public void LoadData()
     {
-        string fullPath = Application.persistentDataPath + directory + fileName;
-        
-        PlayerCounter loadPlayer = Data.Decrypt<PlayerCounter>(fullPath, key);
+        string fullPath = Application.persistentDataPath + directory + filename;
+
+        Hero loadPlayer = Data.Decrypt<Hero>(fullPath, key);
 
         if (loadPlayer != null)
         {
-            player.transform.position = loadPlayer.pos;
+            heroName = loadPlayer.name;
+            heroLevel = loadPlayer.level;
+            heroSpeed = loadPlayer.speed;
+            pos = loadPlayer.pos;
         }
     }
+}
+
+[System.Serializable]
+public class Hero
+{
+    public string name;
+    public int level;
+    public float speed;
+    public Vector3 pos;
 }
