@@ -69,8 +69,10 @@ namespace ArthurKnight
             string json = JsonUtility.ToJson(data);
             string result = "";
     
-             for (int i = 0; i < json.Length; i++) result += (char)(json[i] ^ key[i % key.Length]);
-                
+             for (int i = 0; i < json.Length; i++) 
+             {
+                 result += (char)(json[i] ^ key[i % key.Length]);
+             }   
             return result;
         }
     
